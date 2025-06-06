@@ -6,14 +6,14 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add controllers
+//  controllers
 builder.Services.AddControllers();
 
-// Add EF Core In-Memory DB for city data
+// In-Memory DB
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("CityDb"));
 
-// Configure JWT Authentication
+// Configure JWT 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
 {
@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Add Swagger with JWT support
+// Swagger 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
