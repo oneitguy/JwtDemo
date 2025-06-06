@@ -84,4 +84,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// seed
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (!db.Cities.Any())
+    {
+        db.Cities.AddRange(
+            new City { Name = "Mumbai", AvgTemperature = 32.5 },
+            new City { Name = "Delhi", AvgTemperature = 30.1 }
+        );
+        db.SaveChanges();
+    }
+}
 app.Run();
