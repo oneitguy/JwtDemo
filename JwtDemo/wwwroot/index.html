@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>JWT Demo</title>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        #main {
+            display: none;
+            margin-top: 20px;
+        }
+
+        input, button {
+            margin: 5px 0;
+            padding: 6px;
+            width: 100%;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>JWT Auth Demo</h1>
+
+    <div class="section" id="login">
+        <h3>Login</h3>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+        <div id="loginStatus"></div>
+    </div>
+
+    <div id="main">
+        <div class="section">
+            <h3>Get Secret Message</h3>
+            <button onclick="getSecret()">Get Secret</button>
+            <pre id="secretResult"></pre>
+        </div>
+
+        <div class="section">
+            <h3>Check City Temperature</h3>
+            <input type="text" id="cityName" placeholder="Enter City Name" />
+            <button onclick="getCityTemp()">Get Temperature</button>
+            <pre id="cityResult"></pre>
+        </div>
+    </div>
+
+    <script>
+        let token = '';
+
+        async function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            const loginStatus = document.getElementById("loginStatus");
+
+            if (response.ok) {
+                const data = await response.json();
+                token = data.token;
+                loginStatus.innerText = "✅ Login successful";
+                document.getElementById("login").style.display = "none";
+                document.getElementById("main").style.display = "block";
+            } else {
+                loginStatus.innerText = "❌ Login failed";
+            }
+        }
+
+        async function getSecret() {
+            const response = await fetch("/api/secret", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const data = await response.text();
+            document.getElementById("secretResult").innerText = data;
+        }
+
+        async function getCityTemp() {
+            const city = document.getElementById("cityName").value;
+
+            const response = await fetch("/api/CityTemp/get-temperature", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ name: city })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                document.getElementById("cityResult").innerText =
+                    `The average temperature in ${result.city} is ${result.avgTemp}°C`;
+            } else {
+                document.getElementById("cityResult").innerText = result.message || "Error fetching data.";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -5,11 +5,11 @@ using System.Linq;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class CityTempControllers : ControllerBase
+public class CityTempController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    public CityTempControllers(AppDbContext context)
+    public CityTempController(AppDbContext context)
     {
         _context = context;
     }
