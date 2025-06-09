@@ -1,60 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using JwtAuthDemo.Services;
+using JwtAuthDemo.Models;
 
-[ApiController]
-[Route("api/[controller]")]
-public class AuthController : ControllerBase
+
+namespace JwtAuthDemo.Controllers
 {
-    private readonly IConfiguration _config;
-
-    public AuthController(IConfiguration config)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
     {
-        _config = config;
-    }
+        private readonly ITokenService _tokenService;
 
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
-    {
-        // Dummy validation, replace with real user check
-        if (request.Username == "ansh" && request.Password == "password123")
+        public AuthController(ITokenService tokenService)
         {
-            var token = GenerateJwtToken(request.Username);
-            return Ok(new { token });
+            _tokenService = tokenService;
         }
-        return Unauthorized();
-    }
 
-    private string GenerateJwtToken(string username)
-    {
-        var jwtSettings = _config.GetSection("JwtSettings");
-
-        var claims = new[]
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, username)
-        };
+            if (request.Username == "ansh" && request.Password == "password123")
+            {
+                var token = _tokenService.GenerateToken(request.Username);
+                return Ok(new { token });
+            }
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: jwtSettings["Issuer"],
-            audience: jwtSettings["Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(double.Parse(jwtSettings["ExpiryMinutes"])),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            return Unauthorized();
+        }
     }
-}
-
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
 }

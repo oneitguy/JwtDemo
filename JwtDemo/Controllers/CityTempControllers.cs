@@ -15,7 +15,7 @@ public class CityTempController : ControllerBase
     }
 
     [HttpPost("get-temperature")]
-    public IActionResult GetTemperature([FromBody] CityRequest request)
+    public IActionResult GetTemperature([FromBody] City request)
     {
         var city = _context.Cities.FirstOrDefault(c => c.Name.ToLower() == request.Name.ToLower());
         if (city == null)

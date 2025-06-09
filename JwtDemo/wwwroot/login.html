@@ -43,9 +43,10 @@
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem("token", data.token);
+                sessionStorage.setItem("jwtToken", data.token); 
                 window.location.href = "index.html";
-            } else {
+            }
+            else {
                 status.innerText = "❌ Login failed.";
                 status.style.color = "red";
             }

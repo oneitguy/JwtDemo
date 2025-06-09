@@ -36,9 +36,13 @@
     </div>
 
     <script>
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("jwtToken");
+
         if (!token) {
-            window.location.href = "login.html";
+            document.body.innerHTML = "<p>You are not logged in. Redirecting to login page in 5 seconds...</p>";
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 3500);
         }
 
         function logout() {
