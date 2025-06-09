@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using JwtAuthDemo.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -12,6 +13,9 @@ builder.Services.AddControllers();
 // In-Memory DB
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("CityDb"));
+
+//jwt generation
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Configure JWT 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
