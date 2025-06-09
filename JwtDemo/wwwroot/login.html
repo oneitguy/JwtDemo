@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - JWT Demo</title>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .status {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div id="status" class="status"></div>
+
+    <script>
+        async function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const status = document.getElementById("status");
+
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("token", data.token);
+                window.location.href = "index.html";
+            } else {
+                status.innerText = "❌ Login failed.";
+                status.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,80 +1,49 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>JWT Demo</title>
+    <title>Home - JWT Demo</title>
     <meta charset="UTF-8" />
     <style>
         body {
             font-family: sans-serif;
             padding: 20px;
-        }
-
-        #main {
-            display: none;
-            margin-top: 20px;
+            max-width: 600px;
+            margin: auto;
         }
 
         input, button {
-            margin: 5px 0;
-            padding: 6px;
             width: 100%;
+            padding: 10px;
+            margin: 10px 0;
         }
 
-        .section {
-            margin-bottom: 30px;
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-    <h1>JWT Auth Demo</h1>
+    <h2>Welcome!</h2>
+    <button onclick="logout()">Logout</button>
 
-    <div class="section" id="login">
-        <h3>Login</h3>
-        <input type="text" id="username" placeholder="Username" />
-        <input type="password" id="password" placeholder="Password" />
-        <button onclick="login()">Login</button>
-        <div id="loginStatus"></div>
-    </div>
-
-    <div id="main">
-        <div class="section">
-            <h3>Get Secret Message</h3>
-            <button onclick="getSecret()">Get Secret</button>
-            <pre id="secretResult"></pre>
-        </div>
-
-        <div class="section">
-            <h3>Check City Temperature</h3>
-            <input type="text" id="cityName" placeholder="Enter City Name" />
-            <button onclick="getCityTemp()">Get Temperature</button>
-            <pre id="cityResult"></pre>
-        </div>
+    <div class="section">
+        <h3>Check City Temperature</h3>
+        <input type="text" id="cityName" placeholder="Enter City Name" />
+        <button onclick="getCityTemp()">Get Temperature</button>
+        <pre id="cityResult"></pre>
     </div>
 
     <script>
-        let token = '';
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+        }
 
-        async function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password })
-            });
-
-            const loginStatus = document.getElementById("loginStatus");
-
-            if (response.ok) {
-                const data = await response.json();
-                token = data.token;
-                loginStatus.innerText = "✅ Login successful";
-                document.getElementById("login").style.display = "none";
-                document.getElementById("main").style.display = "block";
-            } else {
-                loginStatus.innerText = "❌ Login failed";
-            }
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
         }
 
         async function getSecret() {
