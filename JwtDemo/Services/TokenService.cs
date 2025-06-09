@@ -1,4 +1,4 @@
-﻿using JwtAuthDemo.Services;
+﻿using JwtDemo.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace JwtAuthDemo.Services
+namespace JwtDemo.Services
 {
     public class TokenService : ITokenService
     {

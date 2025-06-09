@@ -1,4 +1,4 @@
-﻿using JwtAuthDemo.Services;
+﻿using JwtDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

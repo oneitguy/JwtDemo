@@ -34,8 +34,3 @@ public class CityTempController : ControllerBase
         return Ok(city);
     }
 }
-
-public class CityRequest
-{
-    public string Name { get; set; }
-}

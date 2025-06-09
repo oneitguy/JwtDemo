@@ -1,4 +1,4 @@
-﻿namespace JwtAuthDemo.Services
+﻿namespace JwtDemo.Services
 {
     public interface ITokenService
     {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using JwtAuthDemo.Services;
-using JwtAuthDemo.Models;
+using JwtDemo.Services;
+using JwtDemo.Models;
 
 
-namespace JwtAuthDemo.Controllers
+namespace JwtDemo.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
