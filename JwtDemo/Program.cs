@@ -1,4 +1,4 @@
-﻿using JwtDemo.Services;
+﻿using Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("CityDb"));
 
 //jwt generation
+//builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 // Configure JWT 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

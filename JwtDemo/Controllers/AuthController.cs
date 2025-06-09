@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using JwtDemo.Services;
+using Services;
 using JwtDemo.Models;
 
 
