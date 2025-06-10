@@ -1,4 +1,4 @@
-﻿namespace JwtDemo.Models
+﻿namespace Data
 {
     public class LoginRequest
     {
