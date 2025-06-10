@@ -1,40 +1,37 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using Data;
 
-namespace Controllers 
-{ 
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class CityTempController : ControllerBase
+{
+    private readonly AppDbContext _context;
 
-    [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class CityTempController : ControllerBase
+    public CityTempController(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public CityTempController(AppDbContext context)
+    [HttpPost("get-temperature")]
+    public IActionResult GetTemperature([FromBody] City request)
+    {
+        var city = _context.Cities.FirstOrDefault(c => c.Name.ToLower() == request.Name.ToLower());
+        if (city == null)
         {
-            _context = context;
+            return NotFound(new { message = "City not found." });
         }
 
-        [HttpPost("get-temperature")]
-        public IActionResult GetTemperature([FromBody] City request)
-        {
-            var city = _context.Cities.FirstOrDefault(c => c.Name.ToLower() == request.Name.ToLower());
-            if (city == null)
-            {
-                return NotFound(new { message = "City not found." });
-            }
+        return Ok(new { city = city.Name, avgTemp = city.AvgTemperature });
+    }
 
-            return Ok(new { city = city.Name, avgTemp = city.AvgTemperature });
-        }
-
-        [HttpPost("add")]
-        public IActionResult AddCity([FromBody] City city)
-        {
-            _context.Cities.Add(city);
-            _context.SaveChanges();
-            return Ok(city);
-        }
+    [HttpPost("add")]
+    public IActionResult AddCity([FromBody] City city)
+    {
+        _context.Cities.Add(city);
+        _context.SaveChanges();
+        return Ok(city);
     }
 }
