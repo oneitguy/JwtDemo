@@ -3,7 +3,7 @@ using Services;
 using Data;
 
 
-namespace JwtDemo.Controllers
+namespace Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -17,7 +17,7 @@ namespace JwtDemo.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public IActionResult Login([FromBody] Login request)
         {
             if (request.Username == "ansh" && request.Password == "password123")
             {

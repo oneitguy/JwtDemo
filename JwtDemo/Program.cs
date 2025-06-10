@@ -18,6 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //jwt generation
 //builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICityService, CityService>();
 
 
 // Configure JWT 

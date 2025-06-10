@@ -1,37 +1,40 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Threading.Tasks;
 using Data;
 
-[Authorize]
-[ApiController]
-[Route("api/[controller]")]
-public class CityTempController : ControllerBase
+namespace Controllers
 {
-    private readonly AppDbContext _context;
-
-    public CityTempController(AppDbContext context)
+    [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CityTempController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ICityService _cityService;
 
-    [HttpPost("get-temperature")]
-    public IActionResult GetTemperature([FromBody] City request)
-    {
-        var city = _context.Cities.FirstOrDefault(c => c.Name.ToLower() == request.Name.ToLower());
-        if (city == null)
+        public CityTempController(ICityService cityService)
         {
-            return NotFound(new { message = "City not found." });
+            _cityService = cityService;
         }
 
-        return Ok(new { city = city.Name, avgTemp = city.AvgTemperature });
-    }
+        [HttpPost("get-temperature")]
+        public async Task<IActionResult> GetTemperature([FromBody] City request)
+        {
+            var result = await _cityService.GetCityTemperatureByNameAsync(request.Name);
 
-    [HttpPost("add")]
-    public IActionResult AddCity([FromBody] City city)
-    {
-        _context.Cities.Add(city);
-        _context.SaveChanges();
-        return Ok(city);
+            if (!result.IsFound)
+            {
+                return NotFound(new { message = result.Message });
+            }
+
+            return Ok(new { city = result.CityName, avgTemp = result.AvgTemperature });
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddCity([FromBody] City city)
+        {
+            var addedCity = await _cityService.AddCityAsync(city);
+            return Ok(addedCity);
+        }
     }
 }
